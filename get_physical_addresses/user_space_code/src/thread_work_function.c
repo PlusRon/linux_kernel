@@ -2,7 +2,8 @@
 #include "../include/user_get_physical_addresses.h"
 #include "../include/thread_TLS.h"
 #include <stdio.h>
-#include <windows.h>
+#include <sys/syscall.h>
+
 
 
 // global variable with initial (.data)
@@ -29,7 +30,7 @@ void init_mutex(){
     pthread_mutex_init(&print_lock, NULL);
 }
 
-void segment_detail(DWORD thread_id, unsigned long* thread_dynamic){
+void segment_detail(int thread_id, int* thread_dynamic){
     // use semaphore to simulate mutex_lock
     // sem_wait(&sem);
     // pthread_mutex_lock(&print_lock);
@@ -37,7 +38,7 @@ void segment_detail(DWORD thread_id, unsigned long* thread_dynamic){
     
     // local variable (stack)
     int local_variable = 10;
-    local_variable = local_variable + (int)thread_id;
+    local_variable = local_variable + thread_id;
 
     // dynamic variable (heap)
     int* dynamic_variable = (int*)malloc(sizeof(int));
@@ -48,7 +49,7 @@ void segment_detail(DWORD thread_id, unsigned long* thread_dynamic){
     *dynamic_variable = local_variable;
 
     // global variable with initial (.data)
-    printf("In thread %lu \n", thread_id);
+    printf("In thread %d \n", thread_id);
     printf("the value of 'init_global_variable' is %d, the offset of the logical address of 'init_global_variable' is %#jx, ", init_global_variable, &init_global_variable);
     printf("the physical address of 'init_global_variable' is %#jx\n\n", user_get_physical_addresses(&init_global_variable) );
     
@@ -61,7 +62,7 @@ void segment_detail(DWORD thread_id, unsigned long* thread_dynamic){
     printf("the physical address of 'local_variable' is %#jx\n\n", user_get_physical_addresses(&local_variable) );
 
     // thread_dynamic (heap)
-    printf("the value of 'thread_dynamic' is %lu, the offset of the logical address of 'thread_dynamic' is %#jx, ",  *thread_dynamic, thread_dynamic);
+    printf("the value of 'thread_dynamic' is %d, the offset of the logical address of 'thread_dynamic' is %#jx, ",  *thread_dynamic, thread_dynamic);
     printf("the physical address of 'thread_dynamic' is %#jx\n\n", user_get_physical_addresses(thread_dynamic) );
 
     // dynamic variable (heap)
@@ -96,7 +97,7 @@ void segment_detail(DWORD thread_id, unsigned long* thread_dynamic){
 
 void* function_1(void* arg){
     // thread ID
-    DWORD tid = GetCurrentThreadId(); // int pid = syscall(__NR_gettid);
+    int tid = syscall( __NR_gettid ); // int pid = syscall(__NR_gettid);
     thread_data.thread_id = tid;
     
     // thread name
@@ -105,7 +106,7 @@ void* function_1(void* arg){
     thread_data.thread_name[sizeof(thread_data.thread_name) - 1] = '\0'; // '\0' be writed into index-15 
 
     // (heap)
-    unsigned long* thread_dynamic = (unsigned long*)malloc(sizeof(unsigned long));
+    int* thread_dynamic = (int*)malloc(sizeof(int));
     if(thread_dynamic == NULL){
         perror("malloc thread_dynamic");
         return 1;
@@ -115,7 +116,7 @@ void* function_1(void* arg){
     // mutex
     pthread_mutex_lock(&print_lock);
     // critical section --
-    printf("I am 'Thread with ID : %lu' executing function_1().\n ", thread_data.thread_id);
+    printf("I am 'Thread with ID : %d' executing function_1().\n ", thread_data.thread_id);
     segment_detail(thread_data.thread_id, thread_dynamic);
     // -- critical section
     pthread_mutex_unlock(&print_lock);
@@ -126,7 +127,7 @@ void* function_1(void* arg){
 
 void* function_2(void* arg){
     // thread ID
-    DWORD tid = GetCurrentThreadId();
+    int tid = syscall( __NR_gettid );
     thread_data.thread_id = tid;
 
     // thread name
@@ -134,7 +135,7 @@ void* function_2(void* arg){
     strncpy(thread_data.thread_name, thrd_name, sizeof(thread_data.thread_name) - 1);
     thread_data.thread_name[sizeof(thread_data.thread_name) - 1] = '\0';
 
-    unsigned long* thread_dynamic = (unsigned long*)malloc(sizeof(unsigned long));
+    int* thread_dynamic = (int*)malloc(sizeof(int));
     if(thread_dynamic == NULL){
         perror("malloc thread_dynamic");
         return 1;
@@ -144,7 +145,7 @@ void* function_2(void* arg){
     // mutex
     pthread_mutex_lock(&print_lock);
     // critical section --
-    printf("I am 'Thread with ID : %lu' executing function_2().\n ", thread_data.thread_id);
+    printf("I am 'Thread with ID : %d' executing function_2().\n ", thread_data.thread_id);
     segment_detail(thread_data.thread_id, thread_dynamic);
     // -- critical section
     pthread_mutex_unlock(&print_lock);

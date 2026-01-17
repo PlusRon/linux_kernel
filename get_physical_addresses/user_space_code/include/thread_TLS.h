@@ -2,10 +2,9 @@
 #define THREAD_TLS
 
 #include <pthread.h>
-#include <windows.h>
 
 struct thread_TLS {
-    DWORD thread_id; // int thread_id;
+    int thread_id; // int thread_id;
     char thread_name[16];
 };
 

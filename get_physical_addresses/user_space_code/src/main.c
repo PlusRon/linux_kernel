@@ -2,7 +2,7 @@
 // #include <stdlib.h>
 // #include <string.h>
 #include <pthread.h>
-#include <windows.h> // #include <sys/syscall.h>
+#include <sys/syscall.h>
 #include "../include/thread_work_function.h"
 
 
@@ -33,13 +33,13 @@ int main(void){
     
 
     // main Thread
-    DWORD main_t_id = GetCurrentThreadId();
+    int main_t_id = syscall( __NR_gettid );
     thread_data.thread_id = main_t_id;
 
     strncpy(thread_data.thread_name, "Main", sizeof(thread_data.thread_name) - 1);
     thread_data.thread_name[sizeof(thread_data.thread_name) - 1] = '\0';
 
-    unsigned long* main_dynamic = (unsigned long*)malloc(sizeof(unsigned long)); // perror : malloc(SIZE_MAX)
+    int* main_dynamic = (int*)malloc(sizeof(int)); // perror : malloc(SIZE_MAX)
     if(main_dynamic == NULL){
         perror("malloc main_dynamic");
         return 1;
@@ -49,7 +49,7 @@ int main(void){
     // mutex
     pthread_mutex_lock(&print_lock);
     // critical section --
-    printf("I am 'Main Thread with ID : %lu' executing main().\n", thread_data.thread_id);
+    printf("I am 'Main Thread with ID : %d' executing main().\n", thread_data.thread_id);
     segment_detail(thread_data.thread_id, main_dynamic);
     // -- critical section
     pthread_mutex_unlock(&print_lock);

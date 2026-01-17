@@ -3,7 +3,6 @@
 
 
 #include "../include/thread_TLS.h"
-#include <windows.h>
 #include <semaphore.h>
 #include <pthread.h>
 
@@ -16,7 +15,7 @@ extern pthread_mutex_t print_lock;
 extern void init_mutex();
 
 // work function call in the thread function
-extern void segment_detail(DWORD thread_id, unsigned long* thread_dynamic);
+extern void segment_detail(int thread_id, int* thread_dynamic);
 
 // thread function for pthread_create()
 extern void* function_1(void* arg);
