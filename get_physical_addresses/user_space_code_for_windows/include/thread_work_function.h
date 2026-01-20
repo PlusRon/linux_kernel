@@ -22,7 +22,4 @@ extern void segment_detail(DWORD thread_id, unsigned long* thread_dynamic);
 extern void* function_1(void* arg);
 extern void* function_2(void* arg);
 
-
-
-
 #endif // THREAD_WORK_FUNCTION

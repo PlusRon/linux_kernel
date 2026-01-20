@@ -80,6 +80,8 @@ void segment_detail(int thread_id, int* thread_dynamic){
     printf("the physical address of function 'function_1()' is %#jx\n\n", user_get_physical_addresses(function_1));
     printf("the offset of the logical address of function 'function_2()' is %#jx, ", function_2);
     printf("the physical address of function 'function_2()' is %#jx\n\n", user_get_physical_addresses(function_2));
+    printf("the offset of the logical address of function 'main()' is %#jx, ", get_main_address());
+    printf("the physical address of function 'main()' is %#jx\n\n", user_get_physical_addresses(get_main_address()));
     // library function
     printf("the offset of the logical address of 'library function printf' is %#jx, ", printf);
     printf("the physical address of 'library function printf' is %#jx\n\n", user_get_physical_addresses(printf));

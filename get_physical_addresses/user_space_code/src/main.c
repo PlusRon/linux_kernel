@@ -69,3 +69,7 @@ int main(void){
 
     return 0;
 }
+
+void* get_main_address(void) {
+    return (void*)main;
+}

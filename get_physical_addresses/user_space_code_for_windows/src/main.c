@@ -6,6 +6,7 @@
 #include "../include/thread_work_function.h"
 
 
+
 int main(void){
     printf("Hello, Linux Kernel\n\n");
     
@@ -68,4 +69,8 @@ int main(void){
 
 
     return 0;
+}
+
+void* get_main_address(void) {
+    return (void*)main;
 }
