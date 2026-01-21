@@ -3,7 +3,7 @@
 
 unsigned long user_get_physical_addresses(void* virtual_address){
     unsigned long res;
-    res = 0x0000FFFF;// syscall(450, virtual_address, &res);
+    syscall(450, virtual_address, &res);
     return res;
 }
 

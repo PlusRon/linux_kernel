@@ -13,9 +13,9 @@
 #include <linux/slab.h>       // kmalloc/kfree 
 
 
-static unsigned long vaddr2paddr(unsigned long vaddr);
+static unsigned long virtual_address_to_physical_address(unsigned long vaddr);
 
-static unsigned long vaddr2paddr(unsigned long vaddr)
+static unsigned long virtual_address_to_physical_address(unsigned long vaddr)
 {
     pgd_t *pgd; // pgd as pointer of pgd_entry
     p4d_t *p4d; // p4d as pointer of p4d_entry
@@ -42,8 +42,9 @@ static unsigned long vaddr2paddr(unsigned long vaddr)
     }
 
 
-    // access to user_page have to get mmap_lock(mmap_sem) to avoid race condition
-    // down_read(&mm->mmap_lock)
+    // Traditional API
+    // down_read(&mm->mmap_lock);
+    // up_read(&mm->mmap_lock);
     
     // Modern API
     // mmap_read_lock(mm);
@@ -57,9 +58,6 @@ static unsigned long vaddr2paddr(unsigned long vaddr)
     // #define pgd_none(pgd)   (!(pgd_val(pgd)))
     if (pgd_none(*pgd)) {
         printk("INVALID : This offset of virtual address is not mapped in PGD table\n");
-        // up_read(&mm->mmap_lock);
-        // Modern API
-        // mmap_read_unlock(mm);
         return -1;
     }
     
@@ -70,7 +68,6 @@ static unsigned long vaddr2paddr(unsigned long vaddr)
     printk("p4d_index = %lu\n", p4d_index(vaddr));
     if (p4d_none(*p4d) || p4d_bad(*p4d)) {
         printk("INVALID : This offset of virtual address is not mapped in P4D table\n");
-        // up_read(&mm->mmap_lock);
         return -1;
     }
 
@@ -80,7 +77,6 @@ static unsigned long vaddr2paddr(unsigned long vaddr)
     printk("pud_index = %lu\n", pud_index(vaddr));
     if (pud_none(*pud)) {
         printk("INVALID : This offset of virtual address is not mapped in PUD table\n");
-        // up_read(&mm->mmap_lock);
         return -1;
     }
     // PUD is huge page or not
@@ -92,7 +88,6 @@ static unsigned long vaddr2paddr(unsigned long vaddr)
         printk("page_addr = %lx, page_offset = %lx\n", page_addr, page_offset);
         printk("vaddr = %lx, paddr = %lx\n", vaddr, paddr);
         printk("------\n");
-        // up_read(&mm->mmap_lock);
         return paddr;
     }
     
@@ -102,7 +97,6 @@ static unsigned long vaddr2paddr(unsigned long vaddr)
     printk("pmd_index = %lu\n", pmd_index(vaddr));
     if (pmd_none(*pmd)) {
         printk("INVALID : This offset of virtual address is not mapped in PMD table\n");
-        // up_read(&mm->mmap_lock);
         return -1;
     }
     // PMD is huge page or not
@@ -125,20 +119,15 @@ static unsigned long vaddr2paddr(unsigned long vaddr)
         printk("page_addr = %lx, page_offset = %lx\n", page_addr, page_offset);
         printk("vaddr = %lx, paddr = %lx\n", vaddr, paddr);
         printk("------\n");
-        // up_read(&mm->mmap_lock);
         return paddr;
     }
 
-    
-    
-    // 對 user page 的存取通常需要持有 mmap_lock（舊稱 mmap_sem），避免競態
     
     pte = pte_offset_kernel(pmd, vaddr);
     printk("pte_val = 0x%lx\n", pte_val(*pte));
     printk("pte_index = %lu\n", pte_index(vaddr));
     if (pte_none(*pte)) {
         printk("INVALID : Empty PTE entry\n");
-        // up_read(&mm->mmap_lock);
         return -1;
     }
 
@@ -147,7 +136,6 @@ static unsigned long vaddr2paddr(unsigned long vaddr)
     // Can not be concatenate to physical
     if(!pte_present(*pte)){
         printk("INVALID : PTE entry exists but not present (Maybe swapped out)\n");
-        // up_read(&mm->mmap_lock);
         return -1;
     }
 
@@ -158,26 +146,11 @@ static unsigned long vaddr2paddr(unsigned long vaddr)
     printk("vaddr = %lx, paddr = %lx\n", vaddr, paddr);
     printk("------\n");
 
-    // up_read(&mm->mmap_lock);
     return paddr;
 }
 
 
-SYSCALL_DEFINE2(getPhysicalAddress, unsigned long , initial, unsigned long, result)
-{
-    unsigned long *m = (unsigned long *)kmalloc(1,GFP_KERNEL);
-    unsigned long physical;
-    unsigned long virtual;
-    copy_from_user(m, initial, sizeof(unsigned long));
-    virtual = *m;
-    physical = vaddr2paddr(virtual);
-    printk("virtual address: %1x\n", virtual);
-    printk("physical address: %1x\n", physical);
-    copy_to_user(result, &physical, sizeof(unsigned long));
-    return 0;
-}
-
-SYSCALL_DEFINE2(getPhysicalAddress, unsigned long __user *, initial, unsigned long __user *, result)
+SYSCALL_DEFINE2(get_physical_addresses, unsigned long __user *, initial, unsigned long __user *, result)
 {
     unsigned long virtual = 0;
     unsigned long physical = 0;
@@ -191,12 +164,13 @@ SYSCALL_DEFINE2(getPhysicalAddress, unsigned long __user *, initial, unsigned lo
     }
 
     if (!current->mm){
-        return -ESRCH; // can not find the mm of process
+        return -ESRCH; // can not find the mm of process (be a kernel thread)
         // return -EINVAL;
     }
 
+    // access to user_page have to get mmap_lock(mmap_sem) to avoid race condition
     mmap_read_lock(current->mm);
-    physical = vaddr2paddr(virtual);
+    physical = virtual_address_to_physical_address(virtual);
     mmap_read_unlock(current->mm);
 
     if ((long)physical < 0){
@@ -212,3 +186,20 @@ SYSCALL_DEFINE2(getPhysicalAddress, unsigned long __user *, initial, unsigned lo
 
     return 0;
 }
+
+/*
+SYSCALL_DEFINE2(get_physical_addresses, unsigned long , initial, unsigned long, result)
+{
+    unsigned long *m = (unsigned long *)kmalloc(1,GFP_KERNEL);
+    unsigned long physical;
+    unsigned long virtual;
+    copy_from_user(m, initial, sizeof(unsigned long));
+    virtual = *m;
+    physical = virtual_address_to_physical_address(virtual);
+    printk("virtual address: %1x\n", virtual);
+    printk("physical address: %1x\n", physical);
+    copy_to_user(result, &physical, sizeof(unsigned long));
+    return 0;
+}
+*/
+
