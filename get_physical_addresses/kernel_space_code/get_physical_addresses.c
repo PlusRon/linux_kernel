@@ -63,6 +63,7 @@ static unsigned long virtual_address_to_physical_address(unsigned long vaddr)
     
     
     // In x86, P4D is folding layer, but also call by API to keep its protable.
+    #ifndef __x86_64__
     p4d = p4d_offset(pgd, vaddr);
     printk("p4d_val = 0x%lx\n", p4d_val(*p4d));
     printk("p4d_index = %lu\n", p4d_index(vaddr));
@@ -70,6 +71,7 @@ static unsigned long virtual_address_to_physical_address(unsigned long vaddr)
         printk("INVALID : This offset of virtual address is not mapped in P4D table\n");
         return -1;
     }
+    #endif
 
     
     pud = pud_offset(p4d, vaddr);
@@ -156,14 +158,17 @@ SYSCALL_DEFINE2(get_physical_addresses, unsigned long __user *, initial, unsigne
     unsigned long physical = 0;
 
     if (!initial || !result){
+        printk("INVALID I/O : pointer of 'initial' or 'result' maybe 'NULL'.\n");
         return -EINVAL;
     }
 
     if (copy_from_user(&virtual, initial, sizeof(unsigned long))){
+        printk("ERROR : 'copy_from_user()' failed.");
         return -EFAULT;
     }
 
     if (!current->mm){
+        printk("Error : can not find the mm of process (be a kernel thread).");
         return -ESRCH; // can not find the mm of process (be a kernel thread)
         // return -EINVAL;
     }
@@ -174,10 +179,12 @@ SYSCALL_DEFINE2(get_physical_addresses, unsigned long __user *, initial, unsigne
     mmap_read_unlock(current->mm);
 
     if ((long)physical < 0){
+        printk("Error : 'virtual_address_to_physical_address()' failed.")
         return -EFAULT;
     }
 
     if (copy_to_user(result, &physical, sizeof(unsigned long))){
+        printk("ERROR : 'copy_to_user()' failed.");
         return -EFAULT;
     }
         
