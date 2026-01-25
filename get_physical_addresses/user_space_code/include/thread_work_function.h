@@ -22,6 +22,6 @@ extern void* function_1(void* arg);
 extern void* function_2(void* arg);
 
 
-
+void* get_main_address(void); 
 
 #endif // THREAD_WORK_FUNCTION

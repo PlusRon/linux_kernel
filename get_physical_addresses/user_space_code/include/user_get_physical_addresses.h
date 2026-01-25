@@ -2,5 +2,6 @@
 #define USER_GET_PHYSICAL_ADDRESSES
 
 unsigned long user_get_physical_addresses(void* virtual_address);
+// long user_get_physical_addresses(void* vaddr);
 
 #endif // USER_GET_PHYSICAL_ADDRESSES
