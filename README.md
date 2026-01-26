@@ -1,6 +1,6 @@
 # Linux OS Kernel - Side Projects
 
-### 一、作業目標　[NCU 許富皓 教授 Guide line](https://staff.csie.ncu.edu.tw/hsufh/COURSES/FALL2023/linux_project_1.html)
+### 一、專案目標　[NCU 許富皓 教授 Guide line](https://staff.csie.ncu.edu.tw/hsufh/COURSES/FALL2023/linux_project_1.html)
 撰寫 system call 利用 `user_get_physical_addresses()` 進行呼叫，來獲得每個 process 的 virtual address 對應到的 physical address。
 
 接著寫一個 multi-thread 的程式，觀察被這些 threads 所共享的 memory areas，了解各個 segment 的共用狀況，並繪圖說明。
@@ -147,7 +147,60 @@
     RAS: Correctable Errors collector initialized 
     ```
 
-### 六、參考 (Reference)
+### 六、專案檔案結構
+```
+│  README.md
+│
+├─get_physical_addresses
+│  │  README_syscall_get_physical_addresses.md
+│  │
+│  ├─kernel_space_code
+│  │      get_physical_addresses.c
+│  │      Makefile
+│  │
+│  ├─user_space_code
+│     │  build.sh
+│     │
+│     ├─build
+│     │      main.exe
+│     │
+│     ├─include
+│     │      thread_TLS.h
+│     │      thread_work_function.h
+│     │      user_get_physical_addresses.h
+│     │
+│     └─src
+│            main.c
+│            thread_work_function.c
+│            user_get_physical_addresses.c
+│  
+│
+├─hello_linux_test
+│  │  README_syscall_hello_linux_test.md
+│  │
+│  ├─kernel_space_code
+│  │      hello_linux_test.c
+│  │      Makefile
+│  │      module_hello_linux_test.c
+│  │      pro_module_hello_linux_test.c
+│  │
+│  └─user_space_code
+│      │  build.sh
+│      │
+│      ├─build
+│      │      main.exe
+│      │
+│      ├─include
+│      │      user_hello_linux_test.h
+│      │
+│      └─src
+│              main.c
+│              user_hello_linux_test.c
+│
+└─images
+        Memory_Segment.png
+```
+### 七、參考 (Reference)
   * [How to get physical address (Memory Management)](https://stackoverflow.com/questions/41090469/linux-kernel-how-to-get-physical-address-memory-management)
   * [Page Table Traversal 機制 程式碼實現](https://zhuanlan.zhihu.com/p/436879901)
   * [`copy_from_user()`用法](https://www.cnblogs.com/Rainingday/p/12618715.html)
