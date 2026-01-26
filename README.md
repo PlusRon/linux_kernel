@@ -11,7 +11,9 @@
 * stack segments (local variables)
 * libraries
 * thread local storages
-
+<p align="left">
+  <img src="images/Memory_Segment.png" alt="Segment of Share Memory" style="width:20%">
+</p>
 只要 variable 的 virtual address 指向相同的 physical address 時，就代表他們有 share memory，所以主要的目標分為以下：
 1. 寫一個 system call 負責將 virtual address 轉成 physical address。
 2. 將此 system call 編入 kernel 當中。
@@ -39,7 +41,99 @@
   * #### Kernel Space (`sudo dmesg`)
     <img src="get_physical_addresses/pic/dmesg/dmesg_1.png" alt="Result of dmesg in user space" style="width:40%">
 ### 五、問題與探討 (Issues and Discussions)
+  * #### shim signature of Security Boot failed.
+    ```
+    # ERROR
+    make[1]: *** No rule to make target ‘certs/rhel.pem’, 
+    needed by ‘certs/x509_certificate_list’. 
+    Stop. make: *** [Makefile:1729: certs] Error 2
 
+    # Solution : 將此兩變量賦值為空值 不去找 shim signature 路徑
+    CONFIG_SYSTEM_TRUSTED_KEYS=""
+    CONFIG_SYSTEM_REVOCATION_KEYS=""
+    ```
+  * #### pahole of `BTF_DEBUG` is not available.
+    ```
+    # ERROR
+    BTF: .tmp_vmlinux.btf: pahole (pahole) is not available
+    Failed to generate BTF for vmlinux
+    Try to disable CONFIG_DEBUG_INFO_BTF
+    make: *** [Makefile:1227: vmlinux] Error 1
+   
+    # Solution : 
+    $ cd /usr/src/linux-5.15.137中
+    $ vim .config 
+    # 依序將這兩個進行 disable
+    CONFIG_DEBUG_INFO = n
+    CONFIG_DEBUG_INFO_BTF = n
+    ```
+  * #### `make -j$(nproc)` 失敗
+    ```
+    # ERROR
+    sed: can't read modules.order: No such file or directory
+    make: *** [Makefile:1544: __modinst_pre] Error 2
+
+    # Solution : 
+    重新編譯 make -j$(nproc)
+    ```
+  * #### DKMS (Dynamic Kernel Module Support) 編譯錯誤
+    ```
+    # ERROR
+    Error! One or more modules failed to install during autoinstall.
+    Refer to previous errors for more information. 
+    * dkms: autoinstall for kernel 5.15.137 [fail] run-parts: 
+    /etc/kernel/postinst.d/dkms exited with return code 11make: 
+    *** [arch/x86/Makefile:266: install] Error 11
+
+    # Solution : 
+    # 查看具體的編譯日誌
+    $ ls /var/lib/dkms/
+    # 查看目前的 dkms 狀態
+    $ dkms status
+    # 移除失敗的模組（以 nvidia 為例，版本號請依 status 結果而定）  
+    $ sudo dkms remove -m mt7902 -v 0.0.1 -k 5.15.137
+    # 再次嘗試 $ sudo make install 就不會再報錯
+    ```
+  * #### bad shim signature :  UEFI 韌體 偵測到自行編譯的核心 沒經過數位簽署，拒絕啟動該核心
+    ```
+    # ERROR
+    Loading Linux 5.15.137...
+    error : bad shim signature.
+    loading initial ramdisk...
+    error: you need to load the kernel first.
+
+    # Solution : 
+    Method_1. 關閉 Secure Boot (最快且最推薦)
+    Method_2. 產生金鑰並將其匯入 UEFI，然後簽署核心
+    ```
+  * #### initramfs (initial RAM filesystem) : 抓不到臨時根目錄
+    ```
+    # ERROR
+    (initramfs) exit
+    ALERT! UUID=46a...5921 does not exist . Dropping to a shell!
+
+    (initramfs) ls /sys/bus/pci/devices/*/device
+    0xa715
+    ....
+    ....
+    0x7902
+
+    (initramfs) dmesg | grep -i vmd
+    ACPI: UEFI 0x00000716A.... (v01 INTEL RstVmdE 00000000 INTL 00000000)
+    ACPI: UEFI 0x000007169.... (v01 INTEL RstVmdV 00000000 INTL 00000000)
+
+    (initramfs) dmesg | grep -i nvme
+    ls: /dev/nvme*: No such file or directory
+
+    (initramfs) ls /sys/class/nvme
+
+    (initramfs) cat /proc/partitions
+    major minor #block name
+
+    (initramfs) dmesg | grep -i error
+    [Firmware Bug] : TSC ADJUST differ with in socket(s), fixing all errors
+    RAS: Correctable Errors collector initialized 
+    ```
 
 ### 六、參考 (Reference)
   * [How to get physical address (Memory Management)](https://stackoverflow.com/questions/41090469/linux-kernel-how-to-get-physical-address-memory-management)
