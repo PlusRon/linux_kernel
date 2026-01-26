@@ -50,19 +50,19 @@ void segment_detail(int thread_id, int* thread_dynamic){
 
     // global variable with initial (.data)
     printf("In thread %d \n", thread_id);
-    printf("the value of 'init_global_variable' is %d, the offset of the logical address of 'init_global_variable' is %#jx, ", init_global_variable, &init_global_variable);
+    printf("the value of 'init_global_variable' is %d, the offset of the logical address of 'init_global_variable' is %p, ", init_global_variable, &init_global_variable);
     printf("the physical address of 'init_global_variable' is %#jx\n\n", user_get_physical_addresses(&init_global_variable) );
     
     // non_initial global variable (.bss)
-    printf("the value of 'non_init_global_variable' is %d, the offset of the logical address of 'non_init_global_variable' is %#jx, ",  non_init_global_variable, &non_init_global_variable);
+    printf("the value of 'non_init_global_variable' is %d, the offset of the logical address of 'non_init_global_variable' is %p, ",  non_init_global_variable, &non_init_global_variable);
     printf("the physical address of 'non_init_global_variable' is %#jx\n\n", user_get_physical_addresses(&non_init_global_variable) );
     
     // local variable (stack)
-    printf("the value of 'local_variable' is %d, the offset of the logical address of 'local_variable' is %#jx, ",  local_variable, &local_variable);
+    printf("the value of 'local_variable' is %d, the offset of the logical address of 'local_variable' is %p, ",  local_variable, &local_variable);
     printf("the physical address of 'local_variable' is %#jx\n\n", user_get_physical_addresses(&local_variable) );
 
     // thread_dynamic (heap)
-    printf("the value of 'thread_dynamic' is %d, the offset of the logical address of 'thread_dynamic' is %#jx, ",  *thread_dynamic, thread_dynamic);
+    printf("the value of 'thread_dynamic' is %d, the offset of the logical address of 'thread_dynamic' is %p, ",  *thread_dynamic, thread_dynamic);
     printf("the physical address of 'thread_dynamic' is %#jx\n\n", user_get_physical_addresses(thread_dynamic) );
 
     // dynamic variable (heap)
@@ -74,16 +74,16 @@ void segment_detail(int thread_id, int* thread_dynamic){
     printf("the physical address of 'thread_data' is %#jx\n\n", user_get_physical_addresses(&thread_data) );
 
     // function
-    printf("the offset of the logical address of function 'segment_detail()' is %#jx, ", segment_detail);
+    printf("the offset of the logical address of function 'segment_detail()' is %p, ", segment_detail);
     printf("the physical address of function 'segment_detail()' is %#jx\n\n", user_get_physical_addresses(segment_detail));
-    printf("the offset of the logical address of function 'function_1()' is %#jx, ", function_1);
+    printf("the offset of the logical address of function 'function_1()' is %p, ", function_1);
     printf("the physical address of function 'function_1()' is %#jx\n\n", user_get_physical_addresses(function_1));
-    printf("the offset of the logical address of function 'function_2()' is %#jx, ", function_2);
+    printf("the offset of the logical address of function 'function_2()' is %p, ", function_2);
     printf("the physical address of function 'function_2()' is %#jx\n\n", user_get_physical_addresses(function_2));
-    printf("the offset of the logical address of function 'main()' is %#jx, ", get_main_address());
+    printf("the offset of the logical address of function 'main()' is %p, ", get_main_address());
     printf("the physical address of function 'main()' is %#jx\n\n", user_get_physical_addresses(get_main_address()));
     // library function
-    printf("the offset of the logical address of 'library function printf' is %#jx, ", printf);
+    printf("the offset of the logical address of 'library function printf' is %p, ", printf);
     printf("the physical address of 'library function printf' is %#jx\n\n", user_get_physical_addresses(printf));
     printf("====================================================================================================================\n");
     

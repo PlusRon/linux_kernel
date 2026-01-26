@@ -63,17 +63,21 @@ static unsigned long virtual_address_to_physical_address(unsigned long vaddr)
     
     
     // In x86, P4D is folding layer, but also call by API to keep its protable.
-    #ifndef __x86_64__
+    
     p4d = p4d_offset(pgd, vaddr);
     printk("p4d_val = 0x%lx\n", p4d_val(*p4d));
     printk("p4d_index = %lu\n", p4d_index(vaddr));
-    if (p4d_none(*p4d) || p4d_bad(*p4d)) {
+    #ifndef __x86_64__
+    if (p4d_none(*p4d)) {
         printk("INVALID : This offset of virtual address is not mapped in P4D table\n");
         return -1;
     }
+    if(p4d_bad(*p4d)){
+	printk("INVALID : P4D table is bad.\n");
+	return -1;
+    }
     #endif
 
-    
     pud = pud_offset(p4d, vaddr);
     printk("pud_val = 0x%lx\n", pud_val(*pud));
     printk("pud_index = %lu\n", pud_index(vaddr));
@@ -82,7 +86,7 @@ static unsigned long virtual_address_to_physical_address(unsigned long vaddr)
         return -1;
     }
     // PUD is huge page or not
-    if(pud_huge(*pud)){
+    if(pud_leaf(*pud)){
         printk("This PUD entry maps to a huge page\n");
         page_addr = pud_pfn(*pud) << PAGE_SHIFT;
         page_offset = vaddr & ~PAGE_MASK;
@@ -103,7 +107,7 @@ static unsigned long virtual_address_to_physical_address(unsigned long vaddr)
     }
     // PMD is huge page or not
     // Check by pmd_huge() or pmd_large()
-    if(pmd_huge(*pmd)){
+    if(pmd_leaf(*pmd)){
     /* #define pmd_large(pmd)   (pmd_val(pmd) & _PAGE_PSE) */ 
     /* #define pmd_huge(pmd)    pmd_large(pmd) */
         
@@ -158,17 +162,30 @@ SYSCALL_DEFINE2(get_physical_addresses, unsigned long __user *, initial, unsigne
     unsigned long physical = 0;
 
     if (!initial || !result){
+<<<<<<< HEAD
         printk("INVALID I/O : pointer of 'initial' or 'result' maybe 'NULL'.\n");
+=======
+	printk("INVALID : pointer of 'initial' or 'result' is 'NULL'.");
+>>>>>>> f223ad0d594b0bf6e6a9dd1c7fa3173acd23f2fe
         return -EINVAL;
     }
 
+    // 'unsigned long virtual' use to storage a virtual_address('void* virtual_address') pass from __user.
     if (copy_from_user(&virtual, initial, sizeof(unsigned long))){
+<<<<<<< HEAD
         printk("ERROR : 'copy_from_user()' failed.");
+=======
+	printk("ERROR : 'copy_from_user()' failed.");
+>>>>>>> f223ad0d594b0bf6e6a9dd1c7fa3173acd23f2fe
         return -EFAULT;
     }
 
     if (!current->mm){
+<<<<<<< HEAD
         printk("Error : can not find the mm of process (be a kernel thread).");
+=======
+	printk("ERROR : can not find the mm of process (be a kernel thread).");
+>>>>>>> f223ad0d594b0bf6e6a9dd1c7fa3173acd23f2fe
         return -ESRCH; // can not find the mm of process (be a kernel thread)
         // return -EINVAL;
     }
@@ -179,12 +196,20 @@ SYSCALL_DEFINE2(get_physical_addresses, unsigned long __user *, initial, unsigne
     mmap_read_unlock(current->mm);
 
     if ((long)physical < 0){
+<<<<<<< HEAD
         printk("Error : 'virtual_address_to_physical_address()' failed.")
+=======
+	printk("ERROR : 'virtual_address_to_physical_address()' failed.");
+>>>>>>> f223ad0d594b0bf6e6a9dd1c7fa3173acd23f2fe
         return -EFAULT;
     }
 
     if (copy_to_user(result, &physical, sizeof(unsigned long))){
+<<<<<<< HEAD
         printk("ERROR : 'copy_to_user()' failed.");
+=======
+	printk("ERROR : 'copy_to_user()' failed.");
+>>>>>>> f223ad0d594b0bf6e6a9dd1c7fa3173acd23f2fe
         return -EFAULT;
     }
         
