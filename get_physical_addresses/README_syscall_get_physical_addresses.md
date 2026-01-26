@@ -12,11 +12,11 @@
         $ mkdir get_physical_addresses
         $ cd get_physical_addresses
         ```
-    - <font size=3>`get_physical_addresses` 目錄下建立 `get_physical_addresses.c`撰寫內容</font>
+    - <font size=3>`get_physical_addresses/` 目錄下建立 `get_physical_addresses.c`撰寫內容</font>
         ```
         $ vim get_physical_addresses.c
         ```
-    - <font size=3> `get_physical_addresses` 目錄下再建立一個 Makefile</font>
+    - <font size=3> `get_physical_addresses/` 目錄下再建立一個 Makefile</font>
         ```
         $ vim Makefile
         ```
@@ -234,8 +234,8 @@
          $ sudo sbsign --key /var/lib/shim-signed/mok/MOK.priv --cert /var/lib/shim-signed/mok/MOK.der /boot/vmlinuz-5.15.137 --output /boot/vmlinuz-5.15.137
 
          ```
-      - ERROR 2 : initramfs (initial RAM filesystem)
-         ```
+   - ERROR 2 : initramfs (initial RAM filesystem)
+     ```
          (initramfs) exit
          ALERT! UUID=46a...5921 does not exist . Dropping to a shell!
 
@@ -273,7 +273,7 @@
          (initramfs) dmesg | grep -i error
          [Firmware Bug] : TSC ADJUST differ with in socket(s), fixing all errors
          RAS: Correctable Errors collector initialized
-         ```
+     ```
       - Solution - 1 : 編譯的核心有驅動但韌體沒有被包進去
         - 若 `dmesg | grep -i firmware` 出現 `Direct firmware load...failed` 代表編譯的核心有驅動但韌體沒有被包進去
           ```
@@ -295,15 +295,15 @@
      ```
 ## 二、User Space Code
    - `user_space_code/`
-     - `include`
+     - `include/`
        - `thread_TLS.h`
        - `thread_work_function.h`
        - `user_get_physical_addresses.h`
-     - `src`
+     - `src/`
        - `main.c`
        - `thread_work_function.c`
        - `user_get_physical_addresses.c`
-     - `build`
+     - `build/`
        - `main.exe`
      - `build.sh`
    - 編譯 並 執行
