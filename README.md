@@ -39,7 +39,19 @@
   * #### User Space (`bash build.sh`)
     <img src="get_physical_addresses/pic/Main_Thread1_execute_success.png" alt="Result of Main_thread and Thread_1 in user space" style="width:100%">
   * #### Kernel Space (`sudo dmesg`)
-    <img src="get_physical_addresses/pic/dmesg/dmesg_1.png" alt="Result of dmesg in user space" style="width:40%">
+    <p align="left">
+      <img src="get_physical_addresses/pic/dmesg/dmesg_1.png" alt="Result of dmesg in user space" style="width:19%">
+      <img src="get_physical_addresses/pic/dmesg/dmesg_2.png" alt="Result of dmesg in user space" style="width:19%">
+      <img src="get_physical_addresses/pic/dmesg/dmesg_3.png" alt="Result of dmesg in user space" style="width:19%">
+      <img src="get_physical_addresses/pic/dmesg/dmesg_4.png" alt="Result of dmesg in user space" style="width:19%">
+      <img src="get_physical_addresses/pic/dmesg/dmesg_5.png" alt="Result of dmesg in user space" style="width:19%">
+      <img src="get_physical_addresses/pic/dmesg/dmesg_6.png" alt="Result of dmesg in user space" style="width:19%">
+      <img src="get_physical_addresses/pic/dmesg/dmesg_7.png" alt="Result of dmesg in user space" style="width:19%">
+      <img src="get_physical_addresses/pic/dmesg/dmesg_8.png" alt="Result of dmesg in user space" style="width:19%">
+      <img src="get_physical_addresses/pic/dmesg/dmesg_9.png" alt="Result of dmesg in user space" style="width:19%">
+      <img src="get_physical_addresses/pic/dmesg/dmesg_10.png" alt="Result of dmesg in user space" style="width:19%">
+    </p>
+    
 ### 五、問題與探討 (Issues and Discussions)
   * #### shim signature of Security Boot failed.
     ```
