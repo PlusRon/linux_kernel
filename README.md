@@ -12,8 +12,8 @@
 * libraries
 * thread local storages
 <p align="left">
-  <img src="images/VMA_Theory.png" alt="Theory of Virtual Memory Area(VMA)" style="width:40%">
-  <img src="images/VMA_Theory_Expected_Result.png" alt="Expected Result of Virtual Memory Area(VMA)" style="width:50%">
+  <img src="images/VMA_Theory.png" alt="Theory of Virtual Memory Area(VMA)" style="width:45.5%">
+  <img src="images/VMA_Theory_Expected_Result.png" alt="Expected Result of Virtual Memory Area(VMA)" style="width:54%">
 </p>
 只要 variable 的 virtual address 指向相同的 physical address 時，就代表他們有 share memory，所以主要的目標分為以下：
 1. 寫一個 system call 負責將 virtual address 轉成 physical address。
@@ -35,8 +35,8 @@
    - [設計 5-Layer Page Table Traversal(PGD、P4D、PUD、PMD、PTE) 、新增 `sys_get_physical_addresses`、編譯過程](https://github.com/PlusRon/linux_kernel/blob/89e90abb961bae78b8029354d4174b41d607229e/get_physical_addresses/README_syscall_get_physical_addresses.md)
 
 ### 四、成果 (Result)
-  * #### Segment 的共用狀況
-    <img src="" alt="Share Memory for Main, Thread_1 and Thread_2">
+  * #### Each Segment of Virtual Memory Area(VMA) for Main_thread, Thread_1, Thread_2
+    <img src="images/VMA_Implement_Actual_Result.png" alt="Implement actual result of Virtual Memory Area(VMA) for Main, Thread_1 and Thread_2" style="width:70%">
   * #### User Space (`bash build.sh`)
     <img src="get_physical_addresses/pic/Main_Thread1_execute_success.png" alt="Result of Main_thread and Thread_1 in user space" style="width:100%">
   * #### Kernel Space (`sudo dmesg`)
