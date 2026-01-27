@@ -12,7 +12,8 @@
 * libraries
 * thread local storages
 <p align="left">
-  <img src="images/Memory_Segment.png" alt="Segment of Share Memory" style="width:20%">
+  <img src="images/VMA_Theory.png" alt="Theory of Virtual Memory Area(VMA)" style="width:40%">
+  <img src="images/VMA_Theory_Expected_Result.png" alt="Expected Result of Virtual Memory Area(VMA)" style="width:50%">
 </p>
 只要 variable 的 virtual address 指向相同的 physical address 時，就代表他們有 share memory，所以主要的目標分為以下：
 1. 寫一個 system call 負責將 virtual address 轉成 physical address。
