@@ -11,6 +11,30 @@
 * stack segments (local variables)
 * libraries
 * thread local storages
+  
+### Virtual Memory Area (VMA) 區塊圖
+共同點 ： Stack、TLS、Shared Memory/library (printf) 都是由 kernel 透過 `mmap()` 分配的區域。在「高位址到低位址」的排列裡，它們會依序出現，看起來像混在一起，但其實是 **相鄰而非重疊**
+  - Shared Memory (printf 所在的 libc)
+    - `printf()` 函式來自共享函式庫 (glibc)
+透過 `mmap()` 映射到程式的位址空間
+    - 屬於 memory-mapped region，通常在 heap 上方、stack 下方
+  - Main thread stack (local_variable)
+    - 每個 thread 都有獨立的 stack，`main()` 的區域變數就放在這裡
+    - 位於高位址區域，往下成長
+  - Thread_1 / Thread_2 stack (local_variable)
+    - 每個 thread 建立時，kernel 會分配獨立的 stack，區域變數就放在這裡
+    - 位於在高位址區域，往下成長
+  - Main thread local storage (TLS)
+    - TLS 是 thread 專屬的資料區，通常由 runtime 透過 `mmap()` 分配
+    - 位置緊鄰自己的 stack，不是 heap，也不是 stack，而是有獨立的固定大小區塊
+  - Thread_1 / Thread_2 local storage (TLS)
+    - 每個 thread 都有自己的 TLS，分配方式和 main thread 類似
+    - 位置通常緊鄰在各自 stack 附近
+
+
+
+
+
 <p align="left">
   <img src="images/VMA_Theory.png" alt="Theory of Virtual Memory Area(VMA)" style="width:44.5%">
   <img src="images/VMA_Theory_Expected_Result.png" alt="Expected Result of Virtual Memory Area(VMA)" style="width:53%">
@@ -36,6 +60,19 @@
 
 ### 四、成果 (Result)
   * #### Each Segment of Virtual Memory Area(VMA) for Main_thread, Thread_1, Thread_2
+    - 多執行緒的 stack 分配方式
+      - 個 thread 建立時，kernel 會透過 `mmap()` 分配一塊獨立的 stack
+      - stack 不一定都在「最高位址」，而是分散在 mmap 區域裡
+      -  thread_1 / thread_2 的 stack 可能被分配在 shared libraries 區域的下方或旁邊
+    - 共享函式庫的位置
+      - `printf()` 來自 glibc，它的程式碼段是透過 `mmap()` 映射的
+      - 通常載入在 固定的高位址區域（例如 `0x7ffff7...`）
+      - 如果 thread stack 被分配在更低的位址，那麼你就會觀察到 shared library 在 thread stack 的高位址方向
+    - 位址空間隨機化 (ASLR)
+      - Linux 啟動程式時會啟用 ASLR (Address Space Layout Randomization)
+      - 會讓 stack、mmap、shared library 的基底位址在每次執行時都有隨機偏移
+      - 所以不同執行可能會看到 shared memory / libraries 和 thread stack 的相對位置不一樣
+
     <img src="images/VMA_Implement_Actual_Result.png" alt="Implement actual result of Virtual Memory Area(VMA) for Main, Thread_1 and Thread_2" style="width:70%">
   * #### User Space (`bash build.sh`)
     <img src="get_physical_addresses/pic/Main_Thread1_execute_success.png" alt="Result of Main_thread and Thread_1 in user space" style="width:100%">
