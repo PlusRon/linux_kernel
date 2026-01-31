@@ -1,6 +1,16 @@
 # Linux OS Kernel - Side Projects
 
-### 一、專案目標　[NCU 許富皓 教授 Guide line](https://staff.csie.ncu.edu.tw/hsufh/COURSES/FALL2023/linux_project_1.html)
+## Outline
+- [專案目標](#一專案目標)
+- [環境、系統 (Environment)](二環境系統-environment)
+- [編譯核心程式 (Implement)](#三編譯核心程式-implement)
+- [成果 (Result)](#四成果-result)
+- [問題與探討 (Issues and Discussions)](#五問題與探討-issues-and-discussions)
+- [專案檔案結構 (Structure of Project)](#六專案檔案結構-structure-of-project)
+- [參考 (Reference)](#七參考-reference)
+
+### 一、專案目標　
+#### [NCU 許富皓 教授 Guide line](https://staff.csie.ncu.edu.tw/hsufh/COURSES/FALL2023/linux_project_1.html)
 撰寫 system call 利用 `user_get_physical_addresses()` 進行呼叫，來獲得每個 process 的 virtual address 對應到的 physical address。
 
 接著寫一個 multi-thread 的程式，觀察被這些 threads 所共享的 memory areas，了解各個 segment 的共用狀況，並繪圖說明。
@@ -185,7 +195,7 @@
     RAS: Correctable Errors collector initialized 
     ```
 
-### 六、專案檔案結構
+### 六、專案檔案結構 (Structure of Project)
 ```
 │  README.md
 │
