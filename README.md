@@ -2,7 +2,7 @@
 
 ## Outline
 - [專案目標](#一專案目標)
-- [環境、系統 (Environment)](二環境系統-environment)
+- [環境與系統 (Environment)](二環境與系統-environment)
 - [編譯核心程式 (Implement)](#三編譯核心程式-implement)
 - [成果 (Result)](#四成果-result)
 - [問題與探討 (Issues and Discussions)](#五問題與探討-issues-and-discussions)
@@ -54,7 +54,7 @@
 2. 將此 system call 編入 kernel 當中。
 4. 利用 multi-thread 呼叫此 system call，觀察其 physical address 是否相同，可以了解其中的共享狀況。
 
-### 二、環境、系統 (Environment)
+### 二、環境與系統 (Environment)
 * CPU
   - 13th Gen Intel(R) Core(TM) i7-13620H
 * OS： ubuntu 24.04.3 desktop
