@@ -255,4 +255,5 @@ Build a syscall can level-by-level to get physical address by traversal 5-layer 
   * [`copy_to_user()`用法](https://blog.csdn.net/qq_30624591/article/details/88544739)
   * [`/arch/alpha/include/asm/page.h` #define](https://elixir.bootlin.com/linux/v4.6/source/arch/alpha/include/asm/page.h#L10)
   * [如何開啟 GRUB 選單](https://magiclen.org/grub-menu/)
-
+## 授權協議 (License)
+本專案採用 [MIT License](LICENSE) 授權
