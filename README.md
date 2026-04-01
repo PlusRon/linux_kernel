@@ -65,7 +65,7 @@ Build a syscall can level-by-level to get physical address by traversal 5-layer 
 ### 三、編譯核心程式 (Implement)
  * #### Test Compile Kernel by [`sys_hello_linux_test`](hello_linux_test)
    - [編譯前置作業、新增測試 `sys_hello_linux_test`、編譯過程、除錯DEBUG](hello_linux_test/README_syscall_hello_linux_test.md)
- * #### Add syscall [`sys_get_physical_addresses`](https://github.com/PlusRon/linux_kernel/tree/dfb34fc8868444c24ec5a50ebf876bce85c18a00/get_physical_addresses) to get physical address from virtual address traversal level by level.
+ * #### Add syscall [`sys_get_physical_addresses`](get_physical_addresses) to get physical address from virtual address traversal level by level.
    - [設計 5-Layer Page Table Traversal(PGD、P4D、PUD、PMD、PTE) 、新增 `sys_get_physical_addresses`、編譯過程](get_physical_addresses/README_syscall_get_physical_addresses.md)
 
 ### 四、成果 (Result)
