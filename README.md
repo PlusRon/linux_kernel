@@ -112,6 +112,8 @@ Build a syscall can level-by-level to get physical address by traversal 5-layer 
     CONFIG_SYSTEM_TRUSTED_KEYS=""
     CONFIG_SYSTEM_REVOCATION_KEYS=""
     ```
+    - kernel resource 預設保留 Ubuntu 或 Debian 使用的金鑰路徑 `/usr/local/share/certs/xxx.pem`，自行環境編譯時，核心找不到該檔案，所以報錯
+    - 將原金鑰檔路徑設為空字串 `""`，編譯時不要內建任何信任金鑰，也不檢查外部模組的簽名，解決編譯期找不到金鑰簽證檔的問題
   * #### pahole of `BTF_DEBUG` is not available.
     ```
     # ERROR
@@ -166,6 +168,11 @@ Build a syscall can level-by-level to get physical address by traversal 5-layer 
     Method_1. 關閉 Secure Boot (最快且最推薦)
     Method_2. 產生金鑰並將其匯入 UEFI，然後簽署核心
     ```
+    - UEFI 的硬體檢測 Secure Boot 拒絕啟動核心，因為自己編譯的 vmlinuz 的驗證檔是空的、沒簽章，為身分不明的執行檔
+    - UEFI 韌體只認微軟（Microsoft）或大型廠商的公鑰
+    - 使用 openssl 產生一對 MOK (Machine Owner Key)，自編核心沒蓋章不放行
+      - 進入 UEFI 的特殊介面，把公鑰匯入到硬體的信任資料庫中
+      - 正常編譯核心完後，使用 sbsigntools 的工具，手動將私鑰蓋在 vmlinuz 檔案上
   * #### initramfs (initial RAM filesystem) : 抓不到臨時根目錄
     ```
     # ERROR
