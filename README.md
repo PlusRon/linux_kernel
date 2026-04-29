@@ -194,6 +194,10 @@ Build a syscall can level-by-level to get physical address by traversal 5-layer 
     [Firmware Bug] : TSC ADJUST differ with in socket(s), fixing all errors
     RAS: Correctable Errors collector initialized 
     ```
+    - **UEFI/BIOS**：識別硬體，並根據 VMD 設定將 NVMe 硬碟掛在 VMD 控制器後方
+    - **Kernel 啟動**：載入臨時的 initramfs（存在於 RAM 中的小檔案系統）
+    - **尋找真正 root 根目錄**：kernel 嘗試根據 `root=UUID=...` 去尋找硬碟
+    - 但如果 **initramfs 裡面沒有 VMD 驅動程式 (vmd.ko)**，kernel 就無法用 VMD 控制器查找到下方的硬碟。看不見硬碟，就抓不到根目錄，卡在 initramfs 殼層（shell）
 
 ### 六、專案檔案結構 (Structure of Project)
 ```
