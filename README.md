@@ -129,6 +129,14 @@ Build a syscall can level-by-level to get physical address by traversal 5-layer 
     CONFIG_DEBUG_INFO = n
     CONFIG_DEBUG_INFO_BTF = n
     ```
+    - 安裝 pahole，就不需要手動去修改 `.config` 關閉兩個選項，編譯程序會自動偵測到pahole的存在並順利完成 BTF 的生成
+      ```
+      sudo apt-get update
+      sudo apt-get install dwarves
+      ```
+    - pahole : Poke-a-hole
+      - 記憶體對齊(Alignment) 工具
+      - Linux 核心的除錯資訊通常很大(DWARF 格式)，為了讓 eBPF 的現代監控工具能輕量化運作，Linux 引入了 BTF (BPF Type Format)。pahole 會讀取編譯器產生的肥大 DWARF 資訊，將其濃縮成精簡的 BTF 格式
   * #### `make -j$(nproc)` 失敗
     ```
     # ERROR
