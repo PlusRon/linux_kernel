@@ -51,11 +51,12 @@ of target processes.
   <img src="images/VMA_Theory.png" alt="Theory of Virtual Memory Area(VMA)" style="width:44.5%">
   <img src="images/VMA_Theory_Expected_Result.png" alt="Expected Result of Virtual Memory Area(VMA)" style="width:53%">
 </p>
+```
 只要 variable 的 virtual address 指向相同的 physical address 時，就代表他們有 share memory，所以主要的目標分為以下：
 1. 寫一個 system call 負責將 virtual address 轉成 physical address。
 2. 將此 system call 編入 kernel 當中。
-4. 利用 multi-thread 呼叫此 system call，觀察其 physical address 是否相同，可以了解其中的共享狀況。
-
+3. 利用 multi-thread 呼叫此 system call，觀察其 physical address 是否相同，可以了解其中的共享狀況。
+```
 ### 二、環境與系統 (Environment)
 * CPU
   - 13th Gen Intel(R) Core(TM) i7-13620H
