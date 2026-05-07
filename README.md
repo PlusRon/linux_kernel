@@ -1,5 +1,7 @@
 # Linux OS Kernel - Side Projects
-Build a syscall can level-by-level to get physical address by traversal 5-layer page table.
+Custom System Call implemented for manual PGD-to-PTE traversal to retrieve physical addresses from virtual memory mappings 
+of target processes.
+
 ## Outline
 - [專案目標](#一專案目標)
 - [環境與系統 (Environment)](#二環境與系統-environment)
