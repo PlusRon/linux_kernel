@@ -61,7 +61,7 @@ of target processes.
 |環境|CPU|OS|Kernel|
 |:---:|:---:|:---:|:---:|
 |**版本**|13th Gen Intel(R) Core(TM) i7-13620H|ubuntu 24.04.3 desktop|5.15.137|
-|**下載**||https://ubuntu.com/download/desktop|https://www.kernel.org/|
+|**下載**||[Ubuntu Download](https://ubuntu.com/download/desktop)|[Kernel Download](https://www.kernel.org/)|
 
 ### 三、編譯核心程式 (Implement)
  * #### Test Compile Kernel by [`sys_hello_linux_test`](hello_linux_test)
