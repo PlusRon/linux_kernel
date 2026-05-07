@@ -58,12 +58,10 @@ of target processes.
 3. 利用 multi-thread 呼叫此 system call，觀察其 physical address 是否相同，可以了解其中的共享狀況。
 
 ### 二、環境與系統 (Environment)
-* CPU
-  - 13th Gen Intel(R) Core(TM) i7-13620H
-* OS： ubuntu 24.04.3 desktop
-  - ubuntu下載點：https://ubuntu.com/download/desktop
-* Kernel 版本： 5.15.137
-  - kernal下載點：https://www.kernel.org/
+|系統環境|CPU|OS|Kernel|
+|:---:|:---:|:---:|:---:|
+|**版本**|13th Gen Intel(R) Core(TM) i7-13620H|ubuntu 24.04.3 desktop|5.15.137|
+|**下載**||https://ubuntu.com/download/desktop|https://www.kernel.org/|
 
 ### 三、編譯核心程式 (Implement)
  * #### Test Compile Kernel by [`sys_hello_linux_test`](hello_linux_test)
@@ -271,7 +269,7 @@ of target processes.
         Memory_Segment.png
 ```
 ### 七、參考 (Reference)
-  * [How to get physical address (Memory Management)](https://stackoverflow.com/questions/41090469/linux-kernel-how-to-get-physical-address-memory-management)
+  * ##### [How to get physical address (Memory Management)](https://stackoverflow.com/questions/41090469/linux-kernel-how-to-get-physical-address-memory-management)
   * ##### [Page Table Traversal 機制 程式碼實現](https://zhuanlan.zhihu.com/p/436879901)
   * ##### [`copy_from_user()`用法](https://www.cnblogs.com/Rainingday/p/12618715.html)
   * ##### [`copy_to_user()`用法](https://blog.csdn.net/qq_30624591/article/details/88544739)
