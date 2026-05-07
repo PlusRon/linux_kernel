@@ -58,7 +58,7 @@ of target processes.
 3. 利用 multi-thread 呼叫此 system call，觀察其 physical address 是否相同，可以了解其中的共享狀況。
 
 ### 二、環境與系統 (Environment)
-|系統環境|CPU|OS|Kernel|
+|環境|CPU|OS|Kernel|
 |:---:|:---:|:---:|:---:|
 |**版本**|13th Gen Intel(R) Core(TM) i7-13620H|ubuntu 24.04.3 desktop|5.15.137|
 |**下載**||https://ubuntu.com/download/desktop|https://www.kernel.org/|
