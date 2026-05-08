@@ -10,6 +10,7 @@ of target processes.
 - [問題與探討 (Issues and Discussions)](#五問題與探討-issues-and-discussions)
 - [專案檔案結構 (Structure of Project)](#六專案檔案結構-structure-of-project)
 - [參考 (Reference)](#七參考-reference)
+- [授權協議 (License)](#授權協議-License)
 
 ### 一、專案目標　
 #### [NCU 許富皓 教授 Guide line](https://staff.csie.ncu.edu.tw/hsufh/COURSES/FALL2023/linux_project_1.html)
@@ -25,27 +26,6 @@ of target processes.
 * thread local storages
   
 ### Virtual Memory Area (VMA) 區塊圖
-共同點 ： Stack、TLS、Shared Memory/library (printf) 都是由 kernel 透過 `mmap()` 分配的區域。在「高位址到低位址」的排列裡，它們會依序出現，看起來像混在一起，但其實是 **相鄰而非重疊**
-  - Shared Memory (printf 所在的 libc)
-    - `printf()` 函式來自共享函式庫 (glibc)
-透過 `mmap()` 映射到程式的位址空間
-    - 屬於 memory-mapped region，通常在 heap 上方、stack 下方
-  - Main thread stack (local_variable)
-    - 每個 thread 都有獨立的 stack，`main()` 的區域變數就放在這裡
-    - 位於高位址區域，往下成長
-  - Thread_1 / Thread_2 stack (local_variable)
-    - 每個 thread 建立時，kernel 會分配獨立的 stack，區域變數就放在這裡
-    - 位於在高位址區域，往下成長
-  - Main thread local storage (TLS)
-    - TLS 是 thread 專屬的資料區，通常由 runtime 透過 `mmap()` 分配
-    - 位置緊鄰自己的 stack，不是 heap，也不是 stack，而是有獨立的固定大小區塊
-  - Thread_1 / Thread_2 local storage (TLS)
-    - 每個 thread 都有自己的 TLS，分配方式和 main thread 類似
-    - 位置通常緊鄰在各自 stack 附近
-
-
-
-
 
 <p align="left">
   <img src="images/VMA_Theory.png" alt="Theory of Virtual Memory Area(VMA)" style="width:44.5%">
