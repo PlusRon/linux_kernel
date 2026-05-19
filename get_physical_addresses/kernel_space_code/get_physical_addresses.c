@@ -73,7 +73,7 @@ static unsigned long virtual_address_to_physical_address(unsigned long vaddr)
         return -1;
     }
     if(p4d_bad(*p4d)){
-	printk("INVALID : P4D table is bad.\n");
+		printk("INVALID : P4D table is bad.\n");
 	return -1;
     }
     #endif
