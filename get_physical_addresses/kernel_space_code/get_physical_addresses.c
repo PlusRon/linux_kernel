@@ -162,30 +162,18 @@ SYSCALL_DEFINE2(get_physical_addresses, unsigned long __user *, initial, unsigne
     unsigned long physical = 0;
 
     if (!initial || !result){
-<<<<<<< HEAD
         printk("INVALID I/O : pointer of 'initial' or 'result' maybe 'NULL'.\n");
-=======
-	printk("INVALID : pointer of 'initial' or 'result' is 'NULL'.");
->>>>>>> f223ad0d594b0bf6e6a9dd1c7fa3173acd23f2fe
         return -EINVAL;
     }
 
     // 'unsigned long virtual' use to storage a virtual_address('void* virtual_address') pass from __user.
     if (copy_from_user(&virtual, initial, sizeof(unsigned long))){
-<<<<<<< HEAD
         printk("ERROR : 'copy_from_user()' failed.");
-=======
-	printk("ERROR : 'copy_from_user()' failed.");
->>>>>>> f223ad0d594b0bf6e6a9dd1c7fa3173acd23f2fe
         return -EFAULT;
     }
 
     if (!current->mm){
-<<<<<<< HEAD
-        printk("Error : can not find the mm of process (be a kernel thread).");
-=======
-	printk("ERROR : can not find the mm of process (be a kernel thread).");
->>>>>>> f223ad0d594b0bf6e6a9dd1c7fa3173acd23f2fe
+        printk("ERROR : can not find the mm of process (be a kernel thread).");
         return -ESRCH; // can not find the mm of process (be a kernel thread)
         // return -EINVAL;
     }
@@ -196,20 +184,12 @@ SYSCALL_DEFINE2(get_physical_addresses, unsigned long __user *, initial, unsigne
     mmap_read_unlock(current->mm);
 
     if ((long)physical < 0){
-<<<<<<< HEAD
-        printk("Error : 'virtual_address_to_physical_address()' failed.")
-=======
-	printk("ERROR : 'virtual_address_to_physical_address()' failed.");
->>>>>>> f223ad0d594b0bf6e6a9dd1c7fa3173acd23f2fe
+		printk("ERROR : 'virtual_address_to_physical_address()' failed.");
         return -EFAULT;
     }
 
     if (copy_to_user(result, &physical, sizeof(unsigned long))){
-<<<<<<< HEAD
         printk("ERROR : 'copy_to_user()' failed.");
-=======
-	printk("ERROR : 'copy_to_user()' failed.");
->>>>>>> f223ad0d594b0bf6e6a9dd1c7fa3173acd23f2fe
         return -EFAULT;
     }
         
