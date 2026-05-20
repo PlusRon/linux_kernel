@@ -1,8 +1,13 @@
+// Module Basics
 #include <linux/init.h>
 #include <linux/module.h>
 #include <linux/kernel.h>
-#include <linux/string.h>
-#include <linux/uaccess.h>
+
+// Data & Memory Copy
+#include <linux/string.h> // memset(), memcpy(), strlen(), strcpy()
+#include <linux/uaccess.h> // copy_from_user(), copy_to_user()
+
+
 #include <linux/init_task.h>
 #include <linux/syscalls.h>
 // 
