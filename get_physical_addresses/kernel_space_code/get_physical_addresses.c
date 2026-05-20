@@ -7,14 +7,15 @@
 #include <linux/string.h> // memset(), memcpy(), strlen(), strcpy()
 #include <linux/uaccess.h> // copy_from_user(), copy_to_user()
 
+// Process & System Calls
+#include <linux/init_task.h> // init_task, idle task
+#include <linux/syscalls.h> // asmlinkage, SYSCALL_DEFINE(MACRO)
 
-#include <linux/init_task.h>
-#include <linux/syscalls.h>
-// 
-#include <linux/mm.h>
-#include <linux/pgtable.h>
+// Memory Management & Page Table
+#include <linux/mm.h> // struct page, struct vm_area_struct (VMA), PAGE_SIZE, PAGE_SHIFT
+#include <linux/pgtable.h> // pgd_offset(), pud_offset(), pmd_offset(), pte_offset_kernel(), pte_offset_map()
 #include <linux/sched/mm.h>   // current->mm
-#include <linux/rwsem.h>      // mmap_read_lock/unlock
+#include <linux/rwsem.h>      // mmap_read_lock() / mmap_read_unlock()
 #include <linux/slab.h>       // kmalloc/kfree 
 
 
