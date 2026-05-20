@@ -58,7 +58,7 @@
         ```
         $ vim Makefile
         ```
-        - <font size=3>Makefile 的內容</font>
+        - <font size=3>Makefile 的內容 (K-build)</font>
           ```c=
           obj-y := hello_linux_test.o
           ```
